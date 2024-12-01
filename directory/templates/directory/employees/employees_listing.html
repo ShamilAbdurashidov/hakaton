@@ -1,0 +1,79 @@
+<table class="table table-hover table-fixed-head">
+    <thead>
+        <tr>
+            <th scope="col" class="fit">#</th>
+            <th scope="col" class="fit"></th>
+            <th scope="col">Организация</th>
+            <th scope="col">ФИО</th>
+            <th scope="col">Логин</th>
+            <th scope="col">Контакты</th>
+            <th scope="col"></th>
+            <th scope="col" class="text-end text-nowrap">
+                {% if check_perm.directory.employees_add %}
+                <a class="modal_link" title="Добавить"
+                    data-modal-title="Новый пользователь" 
+                    data-modal-size="modal-lg"
+                    data-target="#datalist"
+                    data-href="{% url 'directory:employees_add' %}?{% url_qs %}">{{ 'Добавить'|action_icon }}</a>
+                {% endif %}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for o in data %}
+        <tr>
+            <th scope="row">{{ o.pk }}</th>
+            <td>{{ o.is_active|bool_icon }}</td>
+            <td class="lh-sm">
+                {{ o.s_office }}
+            </td>
+            <td class="lh-sm">
+                {{ o.employee_name|highlight:ff.cleaned_data.q }}
+            </td>
+            <td class="lh-sm">
+                {{ o.user.username|highlight:ff.cleaned_data.q }}
+                <div class="text-muted small">{{ o.s_role }}</div>
+            </td>
+            <td class="lh-sm">
+                {% if o.phone_number %}<div>{{ o.phone_number|highlight:ff.cleaned_data.q }}</div>{% endif %}
+                {% if o.e_mail %}<div>{{ o.e_mail|highlight:ff.cleaned_data.q }}</div>{% endif %}
+            </td>
+            <td class="text-nowrap">
+                {% if check_perm.directory.employees_change_password %}
+                <a class="modal-link" 
+                    data-modal-title='Смена пароля пользователя "{{ o.employee_name }}"' 
+                    data-modal-size="modal-md"
+                    data-target="#datalist"
+                    data-href="{% url 'directory:employees_change_password' o.pk %}?{% url_qs %}">Сменить пароль</a>
+                {% endif %}
+            </td>
+            <td class="text-nowrap text-end">
+                {% if check_perm.directory.employees_change %}
+                <a class="modal-link me-2" title="Изменить" 
+                    data-modal-title='Изменение данных пользователя "{{ o.employee_name }}"' 
+                    data-modal-size="modal-lg"
+                    data-target="#datalist"
+                    data-href="{% url 'directory:employees_change' o.pk %}?{% url_qs %}">{{ 'Изменить'|action_icon }}</a>
+                {% endif %}
+                {% if check_perm.directory.employees_delete_complete %}
+                <a class="text-danger dialog-delete" title="Удалить" 
+                    data-target="#datalist" 
+                    data-href="{% url 'directory:employees_delete_complete' o.pk %}?{% url_qs %}">{{'Удалить'|action_icon }}</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="100">
+                <div class="form-text">Количество записей: {{ count }}</div>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="my-2">
+    {% url 'directory:employees_listing' as pager_base_url %}
+    {% include '_parts/pager_ajax.html' with objects=data target='#datalist' base_url=pager_base_url %}
+</div>

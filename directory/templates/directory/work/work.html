@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ block.super }} - {{ page_title }}{% endblock %}
+
+
+
+{% block breadcrumbs %}
+{% url 'home' as home_url %}{% breadcrumb "Главная" home_url %}
+{% breadcrumb 'Справочники' %}
+{% breadcrumb page_title %}
+{% endblock %}
+
+{% block content %}
+<fieldset class="p-4 mt-5 bg-white">
+    <div class="row mt-1 mb-3">
+        <div class="col-12">
+            <form id="ff" class="ajax_form" data-target="#datalist" action="{% url 'directory:work_listing' %}" method="get">
+                {% include "_parts/form.html" with form=ff %}
+            </form>
+        </div>
+    </div>
+    <div id="datalist" class="ajax-container" data-form="#ff"></div> 
+</fieldset>
+{% endblock %}

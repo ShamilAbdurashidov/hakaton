@@ -1,0 +1,9 @@
+__pycache__
+*.djcache
+
+config/settings/local.py
+storage/cache
+storage/static/cache
+storage/media
+
+wkhtmltox-0.12.6-1.msvc2015-win64.exe

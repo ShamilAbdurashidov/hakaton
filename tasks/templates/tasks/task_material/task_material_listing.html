@@ -1,0 +1,54 @@
+<table class="table table-hover table-fixed-head table-bordered border-secondary mt-2 lh-sm">
+    <thead>
+        <tr>
+            <th scope="col" rowspan="2" class="align-middle">Наименование</th>
+            <th scope="col" rowspan="2" class="align-middle">ед. измерения</th>
+            <th scope="col" rowspan="2" class="align-middle">Количество</th>
+            <th scope="col" rowspan="2" class="align-middle">Фактически сделано</th>
+            
+            <th scope="col" colspan="2" class="align-middle text-center">Материалы</th>
+            <th scope="col" colspan="2" class="align-middle text-center">Работа</th>
+            <th scope="col" colspan="2" class="align-middle text-center">Материалы(себестоимость)</th>
+            <th scope="col" colspan="2" class="align-middle text-center">Работа(себестоимость)</th>
+        </tr>
+        <tr>
+            <th scope="col" class="align-middle text-center">Цена за ед</th>
+            <th scope="col" class="align-middle text-center">Итого, руб.</th>
+            <th scope="col" class="align-middle text-center">Цена за ед</th>
+            <th scope="col" class="align-middle text-center">Итого, руб.</th>
+            <th scope="col" class="align-middle text-center">Цена за ед</th>
+            <th scope="col" class="align-middle text-center">Итого, руб.</th>
+            <th scope="col" class="align-middle text-center">Цена за ед</th>
+            <th scope="col" class="align-middle text-center">Итого, руб.</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for o in data %}
+        <tr>
+            <td>{{ o.s_material }}</td>
+            <td>{{ o.s_unit_measure }}</td>
+            <td>{{ o.material_count }}</td>
+            <td>{{ o.material_count_fact }}</td>
+            <td>{{ o.material_count }}</td>
+            <td>{{ o.material_cost_total }}</td>
+            <td>{{ o.work_cost }}</td>
+            <td>{{ o.work_cost_total }}</td>
+            <td>{{ o.s_material.cost_value }}</td>
+            <td>material_count  умножаем на поле таблицы s_material cost_value</td>
+            <td>{{ o.s_material.labor_cost }}</td>
+            <td>work_cost  на labor_cost и на умножаем на поле таблицы s_material labor_cost</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="100">
+                <div class="form-text">Количество записей: {{ count }}</div>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+<div class="my-2">
+    {% url 'tasks:task_material_listing' task.pk as pager_base_url %}
+    {% include '_parts/pager_ajax.html' with objects=data target='#main_modal_body' base_url=pager_base_url %}
+</div>

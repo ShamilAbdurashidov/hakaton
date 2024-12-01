@@ -1,0 +1,38 @@
+{% if objects.paginator.num_pages > 1 %}
+<div class="row d-flex align-items-center mt-2">
+  <div class="col d-flex justify-content-start align-items-center">
+    <nav class="">
+        <ul class="pagination pagination-sm p-0 m-0">
+        {% if objects.has_previous %}
+            <li class="page-item">
+                <a class="ajax_link page-link" data-target="{{ target }}" data-href="{{ base_url }}?{% url_replace page=objects.previous_page_number %}" aria-label="Previous" role="button">
+                  <span aria-hidden="true">Назад</span>
+                </a>
+              </li>
+        {% endif %}
+        {% page_range objects as page_range %}
+        {% for i in page_range %}
+            {% if i == objects.number %}
+                <li class="page-item active" aria-current="page"><span class="page-link">{{ objects.number }}</span></li>
+            {% else %}
+                <li class="page-item"><a class="ajax_link page-link" data-target="{{ target }}" data-href="{{ base_url }}?{% url_replace page=i %}" role="button">{{i}}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% if objects.has_next %}
+            <li class="page-item">
+                <a class="ajax_link page-link" data-target="{{ target }}" data-href="{{ base_url }}?{% url_replace page=objects.next_page_number %}" aria-label="Next" role="button">
+                  <span aria-hidden="true">Вперед</span>
+                </a>
+              </li>
+        {% endif %}
+        </ul>
+    </nav>
+  </div>
+  {% if per_page_changer %}
+  <div class="col d-flex justify-content-end align-items-center">
+    <span class="small text-muted me-2">Показывать по: </span> 
+    {% per_page_changer base_url=base_url counts='5 10 20 30 40 50' target=target %}
+  </div>
+  {% endif %}
+</div>
+{% endif %}

@@ -1,0 +1,60 @@
+<table class="table table-hover table-fixed-head">
+    <thead>
+        <tr>
+            <th scope="col" class="fit">#</th>
+            <th scope="col">Наименование</th>
+            <th scope="col">Адрес</th>
+            <th scope="col" class="text-end text-nowrap">
+                {% if check_perm.directory.office_add %}
+                <a class="modal_link" title="Добавить"
+                    data-modal-title="Новая организация" 
+                    data-modal-size="modal-lg"
+                    data-target="#datalist"
+                    data-href="{% url 'directory:office_add' %}?{% url_qs %}">{{ 'Добавить'|action_icon }}</a>
+                {% endif %}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for o in data %}
+        <tr>
+            <th scope="row">{{ o.pk }}</th>
+            <td class="lh-sm">{{ o.office_name|highlight:ff.cleaned_data.q }}</td>
+            <td class="lh-sm">
+                {{ o.district_name|filter_none }}
+                <div class="small text-muted">{{ o.address_legal|filter_none }}</div>
+            </td>
+            <td class="text-nowrap text-end">
+                {% if check_perm.directory.office_change %}
+                <a class="modal-link me-2" title="Изменить" 
+                    data-modal-title="Изменение данных организации" 
+                    data-modal-size="modal-lg"
+                    data-target="#datalist"
+                    data-href="{% url 'directory:office_change' o.pk %}?{% url_qs %}">
+                    {{ 'Изменить'|action_icon }}
+                </a>
+                {% endif %}
+                {% if check_perm.directory.office_delete_complete %}
+                <a class="text-danger dialog-delete" title="Удалить" 
+                    data-target="#datalist" 
+                    data-href="{% url 'directory:office_delete_complete' o.pk %}?{% url_qs %}">
+                    {{'Удалить'|action_icon }}
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="100">
+                <div class="form-text">Количество записей: {{ count }}</div>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="my-2">
+    {% url 'directory:office_listing' as pager_base_url %}
+    {% include '_parts/pager_ajax.html' with objects=data target='#datalist' base_url=pager_base_url %}
+</div>

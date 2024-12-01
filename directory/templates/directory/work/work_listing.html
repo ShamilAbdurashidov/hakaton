@@ -1,0 +1,53 @@
+{% load humanize %}
+<table class="table table-hover table-fixed-head">
+    <thead>
+        <tr>
+            <th scope="col" class="fit">#</th>
+            <th scope="col">Шифр</th>
+            <th scope="col">Наименование</th>
+            <th scope="col" class="text-end text-nowrap">
+                {% if check_perm.directory.work_add %}
+                <a class="modal_link" title="Добавить"
+                    data-modal-title="Новая работа" 
+                    data-modal-size="modal-md"
+                    data-target="#datalist"
+                    data-href="{% url 'directory:work_add' %}?{% url_qs %}">{{ 'Добавить'|action_icon }}</a>
+                {% endif %}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for o in data %}
+        <tr>
+            <th scope="row">{{ o.pk }}</th>
+            <td>{{ o.work_code|highlight:ff.cleaned_data.q }}</td>
+            <td>{{ o.work_name|highlight:ff.cleaned_data.q }}</td>
+            <td class="text-nowrap text-end">
+                {% if check_perm.directory.work_change %}
+                <a class="modal_link me-2" title="Изменить" 
+                    data-modal-title="Изменение данных работы" 
+                    data-modal-size="modal-md"
+                    data-target="#datalist"
+                    data-href="{% url 'directory:work_change' o.pk %}?{% url_qs %}">{{ 'Изменить'|action_icon }}</a>
+                {% endif %}
+                {% if check_perm.directory.work_delete_complete %}
+                <a class="text-danger dialog_delete" title="Удалить" 
+                    data-target="#datalist" 
+                    data-href="{% url 'directory:work_delete_complete' o.pk %}?{% url_qs %}">{{'Удалить'|action_icon }}</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="100">
+                <div class="form-text">Количество записей: {{ count }}</div>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+<div class="my-2">
+    {% url 'directory:work_listing' as pager_base_url %}
+    {% include '_parts/pager_ajax.html' with objects=data target='#datalist' base_url=pager_base_url %}
+</div>

@@ -1,0 +1,13 @@
+-- Сначала даем доступ всем ко следующим маршрутам
+p, *, home, *, allow
+p, *, users.login, *, allow
+p, *, users.logout, *, allow
+p, *, users.password_change, *, allow
+
+
+g, django-superuser, Администратор
+
+
+-- Настройки прав доступа для пользователей Администратор
+p, Администратор, *, *, allow
+

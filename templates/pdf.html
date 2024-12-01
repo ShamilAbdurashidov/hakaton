@@ -1,0 +1,31 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ 'bootstrap/bootstrap.min.css'|pdf_local_styles }}">
+  <link rel="stylesheet" href="{{ 'bootstrap-icons/bootstrap-icons.min.css'|pdf_local_styles }}">
+  <link rel="stylesheet" href="{{ 'bootstrap/bootstrap-print.min.css'|pdf_local_styles }}">
+  <link rel="stylesheet" href="{{ 'css/app.css'|pdf_local_styles }}">
+  <link rel="stylesheet" href="{{ 'css/styles.css'|pdf_local_styles }}">
+  <style>
+    html { 
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 1em;
+      margin: 0; 
+      padding: 0;
+      height: 0;
+    }
+    .avoid-break { page-break-inside: avoid; }
+    .new-page,
+    .before-break { page-break-before: always; }
+    .after-break { page-break-after: always; }
+    table.table-borderless td { border-style : hidden!important; }
+  </style>
+  <title>{% block title %}ХАКАТОН{% endblock %}</title>
+</head>
+<body>
+  {% block content %}{% endblock %}
+</body>
+</html>

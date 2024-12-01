@@ -1,0 +1,98 @@
+{% load compress %}
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% compress css %}
+    <link rel="stylesheet" href="{{ STATIC_URL}}bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap-icons/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL}}css/app.css">
+    <link rel="stylesheet" href="{{ STATIC_URL}}css/styles.css">
+    <style>
+      @font-face {
+          font-family: HelveticaNeue;
+          font-weight: 100;
+          src: url("/static/fonts/HelveticaNeue-Thin.otf") format("opentype");
+      }
+      @font-face {
+          font-family: HelveticaNeue;
+          font-weight: normal;
+          src: url("/static/fonts/HelveticaNeue-Roman.otf") format("opentype");
+      }
+      .password-control {
+          position: absolute;
+          top: 12px;
+          right: 10px;
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          color: #888 !important;
+      }
+    </style>
+  {% endcompress %}
+  <title>ХАКАТОН</title>
+</head>
+
+<body style='
+    font-family: HelveticaNeue, sans-serif; 
+    background-image: linear-gradient(#24357B, #08195B)'>
+
+    <div class="vh-100" style="
+        background-image: url('/static/img/auth-page-bg.jpg');
+        background-repeat: no-repeat;
+        background-position: center bottom;
+        background-size: 100% 30%;">
+
+        <div class="container vh-100 d-flex flex-column justify-content-between p-5" style="width:80%;">
+
+            <div class="row g-2 d-flex align-items-center">
+                <div class="col col-lg-auto text-center"><img src="/static/img/logo.svg"></div>
+                <div class="d-none d-lg-block col-lg-3 text-uppercase fw-bold text-white opacity-50 fs-6">
+                    Муфтият<br>Республики Дагестан
+                </div>
+                <div class="d-none d-lg-block col-lg"></div>
+            </div>
+
+            <div class="d-flex align-items-center flex-grow-1">
+                <div class="row w-100 mt-lg-4">
+
+                    <div class="col-12 col-lg mt-5 mt-lg-0">
+                        <div class="display-3 opacity-75 text-white lh-1 fw-light text-center text-lg-start">
+                            Работа найдётся<br>
+                            для каждого
+                        </div>
+                        <div class="opacity-50 text-white mt-4 fs-5 fw-light text-center text-lg-start">
+                            Постоянный количественный рост и сфера нашей<br>
+                            активности является качественно новой ступенью<br>
+                            как самодостаточных.
+                        </div>
+                    </div>
+    
+                    <div class="col-12 col-lg-auto mt-5 mt-lg-0 d-flex justify-content-center justify-content-lg-end">
+                        <div class="card bg-white rounded-2 border-0 shadow shadow-lg" style="width:28rem;">
+                            <div class="card-body p-5">
+                                <div class="fw-bold fs-3 text-center lh-1 mb-5" style="color: #24357D;">Войдите в систему</div>
+                                <form class="ajax-form" enctype="multipart/form-data" action="{% url 'users:login' %}" method="post">
+                                    {% include "_parts/form.html" with form=form %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+    
+</body>
+{% compress js %}
+<script src="{{ STATIC_URL}}jquery/jquery-3.6.0.min.js"></script>
+<script src="{{ STATIC_URL }}bootstrap/bootstrap.bundle.min.js"></script>
+<script src="{{ STATIC_URL }}js/app.js"></script>
+{% endcompress %}
+</html>

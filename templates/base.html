@@ -1,0 +1,121 @@
+{% load compress %}
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% compress css %}
+      <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/bootstrap.min.css">
+      <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap-icons/bootstrap-icons.min.css" />
+      <link rel="stylesheet" href="{{ STATIC_URL }}css/select2-bootstrap-5-theme.min.css" />
+      <link rel="stylesheet" href="{{ STATIC_URL }}glightbox/css/glightbox.min.css">
+      <link rel="stylesheet" href="{{ STATIC_URL }}css/app.css">
+      <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
+      <link rel="stylesheet" href="{{ STATIC_URL }}admin/css/vendor/select2/select2.css" media="screen">
+      <link rel="stylesheet" href="{{ STATIC_URL }}admin/css/autocomplete.css" media="screen">
+      <link rel="stylesheet" href="{{ STATIC_URL }}autocomplete_light/select2.css" media="screen">
+    {% endcompress %}
+    <title>{% block title %}ХАКАТОН{% endblock %}</title>
+  </head>
+  <body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg bg-navbar shadow-bottom shadow-sm border-bottom py-0 bg-secondary bg-opacity-10">
+      <div class="container">
+          <a class="navbar-brand text-expressive text-uppercase me-4" href="{% url 'home' %}">
+            ХАКАТОН
+          </a>
+
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              {% get_nav top_left_menu as items %}
+              {% for item in items %}
+                <li class="nav-item d-flex align-items-center justify-content-center{% if item.sub != None %} dropdown{% endif %}">
+                  {% if item.sub == None %} 
+                    <a class="nav-link{% if item.selected %} active{% endif %} {{ item.class|filter_none }}"{% if item.selected %} aria-current="page"{% endif %} {{ item.data_attrs_str }} href="{{item.url}}">{{ item.icon|filter_none|safe }}{{item.name}}</a>
+                  {% else %}
+                    <a class="nav-link dropdown-toggle{% if item.selected %} active{% endif %} {{ item.class|filter_none }}" href="#" id="item{{ forloop.counter }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ item.icon|filter_none|safe }}{{item.name}}</a>
+                    <ul class="dropdown-menu" aria-labelledby="item{{ forloop.counter }}">
+                      {% for sub_item in item.sub %}
+                      <li>
+                        {% if sub_item.sub == None %}
+                        <a class="dropdown-item{% if sub_item.selected %} active{% endif %} {{ sub_item.class|filter_none }}" {{ sub_item.data_attrs_str }} href="{{sub_item.url}}">{{sub_item.name}}</a>
+                        {% else %}
+                        <a class="dropdown-item{% if sub_item.selected %} active{% endif %}" href="#">{{sub_item.name}} &raquo;</a>
+                        <ul class="dropdown-menu dropdown-submenu">
+                          {% for sub2_item in sub_item.sub %}
+                          <li><a class="dropdown-item{% if sub2_item.selected %} active{% endif %}" {{ sub2_item.data_attrs_str }} href="{{sub2_item.url}}">{{sub2_item.name}}</a></li>
+                          {% endfor %}
+                        </ul>
+                        {% endif %}
+                      </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <span class="navbar-text">
+            <ul class="navbar-nav">
+              {% get_nav top_right_menu as items %}
+              {% for item in items %}
+                <li class="nav-item{% if item.sub != None %} dropdown{% endif %}">
+                  {% if item.sub == None %} 
+                    <a class="nav-link{% if item.selected %} active{% endif %}{% if item.class %} {{ item.class }}{% endif %}"{% if item.selected %} aria-current="page"{% endif %} {{ sub_item.data_attrs_str }} href="{{item.url}}">{{item.name}}</a>
+                  {% endif %}
+                  {% if item.sub != None %}
+                    <a class="nav-link dropdown-toggle{% if item.selected %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ item.name|safe }}</a>
+                    <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
+                      {% for sub_item in item.sub %}
+                      <li><a class="dropdown-item{% if sub_item.selected %} active{% endif %}{% if sub_item.class %} {{ sub_item.class }}{% endif %}" {{ sub_item.data_attrs_str }} href="{{sub_item.url}}">{{sub_item.name}}</a></li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </span>
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <nav class="mt-2" style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
+        <ol class="breadcrumb  breadcrumb-dividers-chevron">{% block breadcrumbs %}{% endblock %}</ol>
+      </nav>
+
+      {% if messages %}
+        {% for message in messages %}
+        <div class="mt-2 alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <main>
+        {% block content %}{% endblock %}
+      </main>
+
+    </div>
+    {% compress js %}
+    <script src="{{ STATIC_URL }}jquery/jquery-3.6.0.min.js"></script>
+    <script src="{{ STATIC_URL }}bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="{{ STATIC_URL }}chartjs/chart.min.js"></script>
+    <script src="{{ STATIC_URL }}chartjs/plugin-datalabels.js"></script>
+    <script src="{{ STATIC_URL }}chartjs/chartjs-plugin-outlabels3.umd.min.js"></script>
+    <script src="{{ STATIC_URL }}inputmask/inputmask.js"></script>
+    <script src="{{ STATIC_URL }}inputmask/bindings/inputmask.binding.js"></script>
+    <script src="{{ STATIC_URL }}glightbox/js/glightbox.min.js"></script>
+    <script src="{{ STATIC_URL }}js/app.js"></script>
+    <script src="{{ STATIC_URL }}js/scripts.js"></script>
+    <script src="{{ STATIC_URL }}js/charts.js"></script>
+    <script src="{{ STATIC_URL }}admin/js/vendor/select2/select2.full.js"></script>
+    <script src="{{ STATIC_URL }}autocomplete_light/autocomplete_light.js"></script>
+    <script src="{{ STATIC_URL }}autocomplete_light/select2.js"></script>
+    <script src="{{ STATIC_URL }}autocomplete_light/i18n/ru.js"></script>
+    <script src="{{ STATIC_URL }}common/select2forwardextras.js"></script>
+    <script src="{{ STATIC_URL }}common/formset_expand.js"></script>
+    {% endcompress %}
+  </body>
+</html>

@@ -1,0 +1,3 @@
+<form enctype="multipart/form-data" action="{% url 'directory:material_add' %}?{% url_qs %}" method="post">
+    {% include "_parts/form.html" with form=form %}
+</form>
