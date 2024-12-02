@@ -3,6 +3,8 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from django.db.models import F, DecimalField
+from django.db.models.functions import Coalesce    
 
 from common.utils import get_count_per_page
 from common.decorators import deletion_error_capture
@@ -14,7 +16,17 @@ from tasks.forms import TaskMaterialForm
 def task_material_listing(request, task_pk):
     """Ajax. Список"""
     task = get_object_or_404(Task, pk=task_pk)
-    data = task.task_material_list.all()
+    data = (
+        task.task_material_list
+        .annotate(
+            unit_measure=F('s_material__s_unit_measure__unit_name'),
+            m_cost_value=F('s_material__cost_value'),
+            cost_value_total=Coalesce(F('material_count'), 0, output_field=DecimalField()) * F('s_material__cost_value'),
+            m_labor_cost=F('s_material__labor_cost'),
+            labor_cost_total=Coalesce(F('work_cost'), 0, output_field=DecimalField()) * Coalesce(F('s_material__labor_cost'), 0, output_field=DecimalField())
+            )
+        .select_related()
+        )
     paginator = Paginator(data, get_count_per_page(request=request))
     return render(request, 'tasks/task_material/task_material_listing.html', {
         'data': paginator.get_page(request.GET.get('page')),

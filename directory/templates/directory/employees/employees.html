@@ -9,14 +9,12 @@
 {% endblock %}
 
 {% block content %}
-<fieldset class="p-4 mt-5 bg-white">
-    <div class="row mt-1 mb-3">
-        <div class="col-12">
-            <form id="ff" class="ajax_form" data-target="#datalist" action="{% url 'directory:employees_listing' %}" method="get">
-                {% include "_parts/form.html" with form=ff %}
-            </form>
-        </div>
+<fieldset class="mt-5 bg-white">
+    <div class="p-4 pb-1 bg-secondary bg-opacity-10">
+        <form id="ff" class="ajax_form" data-target="#datalist" action="{% url 'directory:employees_listing' %}" method="get">
+            {% include "_parts/form.html" with form=ff %}
+        </form>
     </div>
-    <div id="datalist" class="ajax-container" data-form="#ff"></div>
+    <div id="datalist" class="ajax-container p-4 mt-2" data-form="#ff"></div> 
 </fieldset>
 {% endblock %}

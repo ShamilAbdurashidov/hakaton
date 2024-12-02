@@ -1,24 +1,35 @@
-<table class="table table-hover table-fixed-head table-bordered border-secondary mt-2 lh-sm">
+{% load humanize %}
+<table class="table table-hover table-fixed-head table-bordered border-secondary mt-2 lh-sm small">
     <thead>
         <tr>
             <th scope="col" rowspan="2" class="align-middle">Наименование</th>
-            <th scope="col" rowspan="2" class="align-middle">ед. измерения</th>
-            <th scope="col" rowspan="2" class="align-middle">Количество</th>
-            <th scope="col" rowspan="2" class="align-middle">Фактически сделано</th>
+            <th scope="col" rowspan="2" class="align-middle">Ед. измер-я</th>
+            <th scope="col" rowspan="2" class="align-middle text-center">Кол-во</th>
+            <th scope="col" rowspan="2" class="align-middle text-center">Сделано факт-ки</th>
             
             <th scope="col" colspan="2" class="align-middle text-center">Материалы</th>
             <th scope="col" colspan="2" class="align-middle text-center">Работа</th>
-            <th scope="col" colspan="2" class="align-middle text-center">Материалы(себестоимость)</th>
-            <th scope="col" colspan="2" class="align-middle text-center">Работа(себестоимость)</th>
+            <th scope="col" colspan="2" class="align-middle text-center">Материалы (себестоимость)</th>
+            <th scope="col" colspan="2" class="align-middle text-center">Работа (себестоимость)</th>
+            
+            <th scope="col" rowspan="2" class="align-middle text-center text-nowrap">
+                {% if check_perm.tasks.task_material_add %}
+                <a class="modal_link" title="Добавить"
+                    data-modal-title="Новый материал к работе" 
+                    data-modal-size="modal-lg"
+                    data-target="#main_modal_body"
+                    data-href="{% url 'tasks:task_material_add' task.pk %}?{% url_qs %}">{{ 'Доб.'|action_icon }}</a>
+                {% endif %}
+            </th>
         </tr>
         <tr>
             <th scope="col" class="align-middle text-center">Цена за ед</th>
             <th scope="col" class="align-middle text-center">Итого, руб.</th>
-            <th scope="col" class="align-middle text-center">Цена за ед</th>
+            <th scope="col" class="align-middle text-center">Цена за ед.</th>
             <th scope="col" class="align-middle text-center">Итого, руб.</th>
             <th scope="col" class="align-middle text-center">Цена за ед</th>
             <th scope="col" class="align-middle text-center">Итого, руб.</th>
-            <th scope="col" class="align-middle text-center">Цена за ед</th>
+            <th scope="col" class="align-middle text-center">Цена за ед.</th>
             <th scope="col" class="align-middle text-center">Итого, руб.</th>
         </tr>
     </thead>
@@ -26,17 +37,35 @@
         {% for o in data %}
         <tr>
             <td>{{ o.s_material }}</td>
-            <td>{{ o.s_unit_measure }}</td>
-            <td>{{ o.material_count }}</td>
-            <td>{{ o.material_count_fact }}</td>
-            <td>{{ o.material_count }}</td>
-            <td>{{ o.material_cost_total }}</td>
-            <td>{{ o.work_cost }}</td>
-            <td>{{ o.work_cost_total }}</td>
-            <td>{{ o.s_material.cost_value }}</td>
-            <td>material_count  умножаем на поле таблицы s_material cost_value</td>
-            <td>{{ o.s_material.labor_cost }}</td>
-            <td>work_cost  на labor_cost и на умножаем на поле таблицы s_material labor_cost</td>
+            <td>{{ o.unit_measure }}</td>
+            <td class=" text-center">{{ o.material_count|filter_none|intcomma }}</td>
+            <td class=" text-center">{{ o.material_count_fact|filter_none|intcomma }}</td>
+            <td class=" text-center">{{ o.material_cost|filter_none|intcomma }}</td>
+            <td class=" text-center">{{ o.material_cost_total|filter_none|intcomma }}</td>
+            <td class=" text-center">{{ o.work_cost|filter_none|intcomma }}</td>
+            <td class=" text-center">{{ o.work_cost_total|filter_none|intcomma }}</td>
+            <td class=" text-center">{{ o.m_cost_value|filter_none|intcomma }}</td>
+            <td class=" text-center">{{ o.cost_value_total|filter_none|floatformat:2|intcomma }}</td>
+            <td class=" text-center">{{ o.m_labor_cost|filter_none|intcomma }}</td>
+            <td class=" text-center">{{ o.labor_cost_total|filter_none|floatformat:2|intcomma }}</td>
+            <td class="text-nowrap text-center">
+                {% if check_perm.tasks.task_material_change %}
+                <a class="modal_link me-2" title="Изменить" 
+                    data-modal-title="Изменение данных материала к работе" 
+                    data-modal-size="modal-lg"
+                    data-target="#main_modal_body"
+                    data-href="{% url 'tasks:task_material_change' o.pk %}?{% url_qs %}">
+                    {{ 'Изменить'|action_icon }}
+                </a>
+                {% endif %}
+                {% if check_perm.tasks.task_material_delete_complete %}
+                <a class="text-danger dialog_delete" title="Удалить" 
+                    data-target="#main_modal_body" 
+                    data-href="{% url 'tasks:task_material_delete_complete' o.pk %}?{% url_qs %}">
+                    {{'Удалить'|action_icon }}
+                </a>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </tbody>

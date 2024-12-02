@@ -15,7 +15,7 @@ DATABASES = {
         'NAME': 'MonitoringConstructionSites',
         'USER': 'postgres',
         'PASSWORD': '!ShamiL19',
-        'HOST': '127.0.0.1',
+        'HOST': '45.143.93.141',
         'PORT': '5432',
     }
 }

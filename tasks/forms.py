@@ -47,13 +47,8 @@ class TaskMaterialForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div(
                 's_material',
-                'material_count',
-                'material_cost',
-                'labor_cost',
-                'work_cost',
-                'material_count_fact',
-                'material_cost_total',
-                'work_cost_total',
+                Row(Column('material_count'), Column('material_cost')),
+                Row(Column('work_cost'), Column('material_count_fact')),
                 Row(Column(Submit('submit', _('Сохранить'), css_class="my-2 px-3"))),
                 css_class='my-2 px-4 py-3 border bg-secondary bg-opacity-10'
                 )
@@ -61,7 +56,17 @@ class TaskMaterialForm(forms.ModelForm):
 
     def save(self, task, commit=True):
         obj = super().save(commit=False)
-        obj.d_task = self.task
+        obj.d_task = task
+
+        if (obj.s_material.cost_work != None) and (obj.material_count != None):
+            obj.labor_cost = obj.s_material.labor_cost * obj.material_count
+        
+        if (obj.labor_cost != None) and (obj.work_cost != None):
+            obj.work_cost_total = obj.labor_cost * obj.work_cost
+
+        if (obj.material_count != None) and (obj.material_cost != None):
+            obj.material_cost_total = obj.material_count * obj.material_cost
+
         if commit: 
             obj.save()
         return obj
@@ -73,14 +78,9 @@ class TaskMaterialSubForm(TaskMaterialForm):
         self.helper.layout = Layout(
             Div(
                 's_material',
-                'material_count',
-                'material_cost',
-                'labor_cost',
-                'work_cost',
-                'material_count_fact',
-                'material_cost_total',
-                'work_cost_total',
-                css_class="subform bg-light shadow-sm border p-3 my-3"
+                Row(Column('material_count'), Column('material_cost')),
+                Row(Column('work_cost'), Column('material_count_fact')),
+                css_class="subform bg-light shadow-sm border p-4 mt-3 mb-4"
             )
         )
 
@@ -102,7 +102,7 @@ class TaskForm(FormsetFormMixin, forms.ModelForm):
             'task_name': forms.Textarea(attrs={ 'rows': 2, 'data-height-auto': True }),
             's_employee': ModelSelect2ForwardExtras(
                 url='directory:autocomplete_employee', 
-                #forward=[forward.Const('1', 'is_active')],
+                forward=[forward.Const('1', 'is_active')],
                 attrs={ 'data-theme': 'bootstrap-5' }),
             's_work': ModelSelect2ForwardExtras(
                 url='directory:autocomplete_work', attrs={ 'data-theme': 'bootstrap-5' }),
@@ -167,8 +167,8 @@ class TaskForm(FormsetFormMixin, forms.ModelForm):
                 Div(
                     HTML('''<h5 class="mb-1">Материалы</h5>'''),
                     'task_material_list',
-                    css_class="bg-secondary bg-opacity-10 px-4 pt-3 pb-1 mt-4 border shadow shadow-sm"
-                ),
+                    css_class="bg-secondary bg-opacity-10 px-4 pt-3 pb-1 mt-4 mb-4"
+                ), 
                 Row(Column(Submit('submit', _('Сохранить'), css_class="my-2 px-3"))),
                 css_class='my-2 px-4 py-3 border bg-secondary bg-opacity-10'
                 )
@@ -186,5 +186,5 @@ class TaskForm(FormsetFormMixin, forms.ModelForm):
                 #work_cost_total - это labor_cost*Стоимость работ - ручной ввод
                 obj.save()
                 if obj.s_work:
-                    self.fields['task_material_list'].formset.save(d_employee=obj)
+                    self.fields['task_material_list'].formset.save(task=obj)
         return obj

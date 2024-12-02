@@ -94,6 +94,7 @@ def action_icon(action):
     action_icons = {
         'ФИЛЬТР': '<span class="text-nowrap"><i class="bi bi-sliders"></i> Фильтр</span>',
         'ДОБАВИТЬ': '<span class="text-nowrap"><i class="bi bi-plus-circle"></i> Добавить</span>',
+        'ДОБ.': '<span class="text-nowrap"><i class="bi bi-plus-lg"></i></span>',
         'ИЗМЕНИТЬ': '<i class="bi bi-pencil"></i>',
         'УДАЛИТЬ': '<i class="bi bi-x-lg"></i>',
         'ОБНОВИТЬ': '<i class="bi bi-arrow-clockwise"></i>',

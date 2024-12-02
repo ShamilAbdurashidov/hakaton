@@ -222,11 +222,12 @@ class TaskMaterial(models.Model):
     """Материал к работе"""
     d_task = models.ForeignKey(Task, verbose_name=_('Задача'), related_name='task_material_list', on_delete=models.PROTECT)
     s_material = models.ForeignKey(Material, verbose_name=_('Материал'), on_delete=models.PROTECT)
-    material_count = models.DecimalField(_('Количество'), max_digits=15, decimal_places=2, blank=True, null=True)
+    material_count = models.DecimalField(_('Количество материала'), max_digits=15, decimal_places=2, blank=True, null=True)
     material_cost = models.DecimalField(_('Стоимость материала'), max_digits=15, decimal_places=2, blank=True, null=True)
-    labor_cost = models.DecimalField(_('Трудозатраты'), max_digits=15, decimal_places=2, blank=True, null=True)
     work_cost = models.DecimalField(_('Стоимость работ'), max_digits=15, decimal_places=2, blank=True, null=True)
     material_count_fact = models.DecimalField(_('Фактически сделано'), max_digits=15, decimal_places=2, blank=True, null=True)
+    
+    labor_cost = models.DecimalField(_('Трудозатраты'), max_digits=15, decimal_places=2, blank=True, null=True)
     material_cost_total = models.DecimalField(_('Стоимость работ итого'), max_digits=15, decimal_places=2, blank=True, null=True)
     work_cost_total = models.DecimalField(_('Стоимость трудозатрат итого'), max_digits=15, decimal_places=2, blank=True, null=True)
 

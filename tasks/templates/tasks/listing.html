@@ -38,9 +38,9 @@
             <td>{{ o.employee_name|filter_none }}</td>
             <td>
                 <a class="modal-link"
-                    data-modal-title="Работы" 
+                    data-modal-title='{{ o.task_name }}. Материалы к работе' 
                     data-modal-size="modal-xl"
-                    data-target="#datalist"
+                    data-target="#datalist" 
                     data-href="{% url 'tasks:task_material_listing' o.pk %}?{% url_qs %}">
                     {{ o.s_work|filter_none }}
                 </a>
