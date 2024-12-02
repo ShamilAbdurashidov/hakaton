@@ -46,8 +46,8 @@
             <td class=" text-center">{{ o.work_cost_total|filter_none|intcomma }}</td>
             <td class=" text-center">{{ o.m_cost_value|filter_none|intcomma }}</td>
             <td class=" text-center">{{ o.cost_value_total|filter_none|floatformat:2|intcomma }}</td>
-            <td class=" text-center">{{ o.m_labor_cost|filter_none|intcomma }}</td>
-            <td class=" text-center">{{ o.labor_cost_total|filter_none|floatformat:2|intcomma }}</td>
+            <td class=" text-center">{{ o.m_cost_work|filter_none|intcomma }}</td>
+            <td class=" text-center">{{ o.cost_work_total|filter_none|floatformat:2|intcomma }}</td>
             <td class="text-nowrap text-center">
                 {% if check_perm.tasks.task_material_change %}
                 <a class="modal_link me-2" title="Изменить" 

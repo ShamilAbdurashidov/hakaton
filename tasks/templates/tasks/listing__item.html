@@ -1,0 +1,53 @@
+
+{% widthratio 20 o.level 1 as padding_left %}
+<tr>
+    <th scope="row">{{ o.pk }}</th>
+    <td>{{ o.date_add|date:'d.m.Y H:i' }}</td>
+    <td style="padding-left: {{ padding_left }}px">
+        {#{% if o.has_children %}#}
+        {#<a href="{% url 'tasks:home' %}?parent={{ o.pk }}">{{ o.task_name|highlight:ff.cleaned_data.q }}</a>#}
+        {#{% else %}#}
+        {{ o.task_name|highlight:ff.cleaned_data.q }}
+        {#{% endif %}#}
+    </td>
+    <td>{{ o.date_start|filter_none|date:'d.m.Y' }}</td>
+    <td>{{ o.date_stop|filter_none|date:'d.m.Y' }}</td>
+    <td>{{ o.date_fact|filter_none|date:'d.m.Y' }}</td>
+    <td>{{ o.employee_name|filter_none }}</td>
+    <td>
+        <a class="modal-link"
+            data-modal-title='{{ o.task_name }}. Материалы к работе' 
+            data-modal-size="modal-xl"
+            data-target="#datalist" 
+            data-href="{% url 'tasks:task_material_listing' o.pk %}?{% url_qs %}">
+            {{ o.s_work|filter_none }}
+        </a>
+    </td>
+    <td class="text-nowrap text-end">
+        {% if check_perm.tasks.change %}
+        <a class="modal_link me-2" title="Изменить" 
+            data-modal-title="Изменение данных задачи" 
+            data-modal-size="modal-lg"
+            data-target="#datalist"
+            data-href="{% url 'tasks:change' o.pk %}?{% url_qs %}">
+            {{ 'Изменить'|action_icon }}
+        </a>
+        {% endif %}
+        {% if check_perm.tasks.delete_complete %}
+        <a class="text-danger dialog_delete" title="Удалить" 
+            data-target="#datalist" 
+            data-href="{% url 'tasks:delete_complete' o.pk %}?{% url_qs %}">
+            {{'Удалить'|action_icon }}
+        </a>
+        {% endif %}
+    </td>
+</tr>
+
+{% if o.children.count %}
+    {% for oo in o.children.all %}
+        {% with template_name="tasks/listing__item.html" %}
+            {% include template_name with o=oo %}
+        {% endwith %}
+    {% endfor %}
+{% endif %}
+

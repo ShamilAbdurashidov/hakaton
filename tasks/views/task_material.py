@@ -22,8 +22,8 @@ def task_material_listing(request, task_pk):
             unit_measure=F('s_material__s_unit_measure__unit_name'),
             m_cost_value=F('s_material__cost_value'),
             cost_value_total=Coalesce(F('material_count'), 0, output_field=DecimalField()) * F('s_material__cost_value'),
-            m_labor_cost=F('s_material__labor_cost'),
-            labor_cost_total=Coalesce(F('work_cost'), 0, output_field=DecimalField()) * Coalesce(F('s_material__labor_cost'), 0, output_field=DecimalField())
+            m_cost_work=F('s_material__cost_work'),
+            cost_work_total=Coalesce(F('s_material__cost_work'), 0, output_field=DecimalField()) * Coalesce(F('s_material__labor_cost'), 0, output_field=DecimalField())
             )
         .select_related()
         )

@@ -167,7 +167,8 @@ class TaskForm(FormsetFormMixin, forms.ModelForm):
                 Div(
                     HTML('''<h5 class="mb-1">Материалы</h5>'''),
                     'task_material_list',
-                    css_class="bg-secondary bg-opacity-10 px-4 pt-3 pb-1 mt-4 mb-4"
+                    css_class="bg-secondary bg-opacity-10 px-4 pt-3 pb-1 mt-4 mb-4",
+                    id="task_material_list-subforms"
                 ), 
                 Row(Column(Submit('submit', _('Сохранить'), css_class="my-2 px-3"))),
                 css_class='my-2 px-4 py-3 border bg-secondary bg-opacity-10'
@@ -179,12 +180,9 @@ class TaskForm(FormsetFormMixin, forms.ModelForm):
         obj = super().save(commit=False)
         if commit: 
             with transaction.atomic():
-                #obj.labor_cost = 
-                #это поле вычисляется след образом, в таблице s_material есть поле labor_cost его нужно 
-                #умножить на Количество(material_count), то что ввели и записать значение.
-                #material_cost_total - это material_count*на Стоимость материала - ручной ввод
-                #work_cost_total - это labor_cost*Стоимость работ - ручной ввод
                 obj.save()
                 if obj.s_work:
                     self.fields['task_material_list'].formset.save(task=obj)
+                else:
+                    obj.task_material_list.all().delete()
         return obj
